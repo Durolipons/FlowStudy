@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ l.name }} — Lists — Bibliotheca{% endblock %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('lists') }}">Lists</a> / {{ l.name }}
+</div>
+<h1>{{ l.name }}</h1>
+<p class="sub">{% if l.description %}{{ l.description }} · {% endif %}{{ items|length }} works</p>
+
+<div class="panel">
+  <h2 style="margin-top:0">Harvard bibliography for this list</h2>
+  {% if bib %}
+  <textarea rows="10" readonly onclick="this.select()">{{ bib }}</textarea>
+  <div style="margin-top:6px">
+    <button class="btn" data-copy="{{ bib }}">Copy bibliography</button>
+    <a class="btn" href="{{ url_for('cite_page', ids=items|map(attribute='id')|join(',')) }}">Open in Cite</a>
+    <span class="muted">Export:</span>
+    <a class="btn small" href="{{ url_for('export', fmt='bibtex', list_id=l.id) }}">BibTeX</a>
+    <a class="btn small" href="{{ url_for('export', fmt='ris', list_id=l.id) }}">RIS</a>
+    <a class="btn small" href="{{ url_for('export', fmt='csv', list_id=l.id) }}">CSV</a>
+    <a class="btn small" href="{{ url_for('export', fmt='docx', list_id=l.id) }}">DOCX</a>
+    <a class="btn small" href="{{ url_for('export', fmt='pdf', list_id=l.id) }}">PDF</a>
+  </div>
+  {% else %}
+  <p class="muted">Add works to generate the bibliography.</p>
+  {% endif %}
+</div>
+
+<h2>Works in this list</h2>
+<table>
+  <tr><th>Title</th><th class="num">Year</th><th>Added</th><th></th></tr>
+  {% for r in items %}
+  <tr>
+    <td><a href="{{ url_for('work_page', work_id=r.id) }}">{{ r.title[:80] }}</a></td>
+    <td class="num">{{ r.year or '—' }}</td>
+    <td class="muted">{{ r.added[:16] }}</td>
+    <td><form class="inline" method="post"
+          action="{{ url_for('list_remove', list_id=l.id) }}">
+        <input type="hidden" name="work_id" value="{{ r.id }}">
+        <button class="btn small danger">Remove</button></form></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

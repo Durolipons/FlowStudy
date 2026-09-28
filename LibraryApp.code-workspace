@@ -1,0 +1,34 @@
+{
+    "folders": [
+        {
+            "name": "LibraryApp",
+            "path": "."
+        },
+        {
+            "name": "Book collection (read-only)",
+            "path": "G:\\Library\\Books"
+        }
+    ],
+    "settings": {
+        "files.readonlyInclude": {
+            "G:/Library/Books/**": true
+        },
+        "files.watcherExclude": {
+            "G:/Library/Books/**": true
+        },
+        "search.exclude": {
+            "G:/Library/Books/**": true
+        },
+        "python.testing.unittestEnabled": true,
+        "python.testing.pytestEnabled": false,
+        "python.testing.unittestArgs": [
+            "-v",
+            "-s",
+            "./tests",
+            "-p",
+            "test*.py",
+            "-t",
+            "."
+        ]
+    }
+}

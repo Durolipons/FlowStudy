@@ -1,0 +1,14 @@
+{
+  "_comment": "Copy this file to config.json and edit for your machine. library_root points at your book collection; db_path is created automatically (leave empty for <project>/data/library.db).",
+  "library_root": "C:\\Books",
+  "db_path": "",
+  "host": "127.0.0.1",
+  "port": 5000,
+  "exclude_dirs": ["System Volume Information", "$RECYCLE.BIN", "desktop.ini"],
+  "exclude_names": ["Thumbs.db", ".DS_Store", ".nomedia", "desktop.ini"],
+  "exclude_ext": [".partial", ".tmp"],
+  "workers": 12,
+  "scan_batch": 5000,
+  "contact_email": "",
+  "flask_secret": "change-me-to-a-long-random-string"
+}

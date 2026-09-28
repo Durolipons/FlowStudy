@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Cite — Bibliotheca{% endblock %}
+{% block content %}
+<h1>Cite &amp; bibliography</h1>
+<p class="sub">Harvard (Cite Them Right). Add work ids as
+  <code>/cite?ids=1,2,3</code>, or use the “Copy reference” button on any
+  work page.</p>
+
+{% if ids %}
+<div class="panel">
+  <h2 style="margin-top:0">References ({{ refs|length }})</h2>
+  {% for r in refs %}
+    <div class="cite">
+      <div class="refs">{{ r.list }}</div>
+      <button class="btn small" data-copy="{{ r.list }}">Copy</button>
+      <span class="pill">in-text: {{ r.in_text }}</span>
+      {% if r.issues %}<span class="pill warn">{{ r.issues|join(', ') }}</span>{% endif %}
+    </div>
+  {% endfor %}
+  <h2>Bibliography (alphabetical, deduplicated)</h2>
+  <textarea rows="{{ [bib.split('\n')|length + 2, 20]|min if bib else 6 }}"
+            readonly onclick="this.select()">{{ bib }}</textarea>
+  <div style="margin-top:6px">
+    <button class="btn" data-copy="{{ bib }}">Copy bibliography</button>
+    <span class="muted">Export:</span>
+    <a class="btn small" href="{{ url_for('export', fmt='bibtex', ids=ids|join(',')) }}">BibTeX</a>
+    <a class="btn small" href="{{ url_for('export', fmt='ris', ids=ids|join(',')) }}">RIS</a>
+    <a class="btn small" href="{{ url_for('export', fmt='csv', ids=ids|join(',')) }}">CSV</a>
+    <a class="btn small" href="{{ url_for('export', fmt='docx', ids=ids|join(',')) }}">DOCX</a>
+    <a class="btn small" href="{{ url_for('export', fmt='pdf', ids=ids|join(',')) }}">PDF</a>
+  </div>
+</div>
+{% else %}
+<div class="panel">
+  <p class="muted">No ids given. Open a work page and use
+    <em>/cite?ids=&lt;work id&gt;</em>, or build a reading list in
+    <a href="{{ url_for('lists') }}">Lists</a> — each list shows its Harvard
+    bibliography.</p>
+</div>
+{% endif %}
+{% endblock %}

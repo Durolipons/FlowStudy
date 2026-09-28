@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Authors — Bibliotheca{% endblock %}
+{% block content %}
+<h1>Authors</h1>
+<p class="sub">{{ total }} authority records, sorted by
+  <em>Family, Given</em>.</p>
+<form class="searchbox" style="max-width:520px; margin-bottom:12px"
+      method="get" action="{{ url_for('authors') }}">
+  <input type="search" name="q" value="{{ flt }}" placeholder="Filter by name…">
+  <button class="btn" type="submit">Filter</button>
+</form>
+<table>
+  <tr><th>Sort name</th><th>Display name</th><th class="num">Works</th></tr>
+  {% for a in rows %}
+  <tr>
+    <td><a href="{{ url_for('author', author_id=a.id) }}">{{ a.sort_name }}</a></td>
+    <td>{{ a.display_name }}</td>
+    <td class="num">{{ a.n }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<div class="pager">
+  {% if page > 1 %}
+    <a class="btn" href="{{ url_for('authors', q=flt, page=page-1) }}">← Prev</a>
+  {% endif %}
+  <span class="muted">page {{ page }} of
+    {{ ((total + per - 1) // per) if total else 1 }}</span>
+  {% if page * per < total %}
+    <a class="btn" href="{{ url_for('authors', q=flt, page=page+1) }}">Next →</a>
+  {% endif %}
+</div>
+{% endblock %}

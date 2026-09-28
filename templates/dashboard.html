@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Bibliotheca{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<p class="sub">Catalogue status for <code>{{ cfg.library_root if cfg else '' }}</code></p>
+
+{% if cfg is not defined %}{% endif %}
+
+<div class="grid g3">
+  <div class="stat"><div class="num">{{ s.works }}</div>
+    <div class="lbl">works catalogued</div></div>
+  <div class="stat"><div class="num">{{ s.authors }}</div>
+    <div class="lbl">authors</div></div>
+  <div class="stat"><div class="num">{{ s.subjects }}</div>
+    <div class="lbl">subjects (encyclopedia)</div></div>
+  <div class="stat"><div class="num">{{ s.files }}</div>
+    <div class="lbl">active files ({{ s.bytes|humansize }})</div></div>
+  <div class="stat"><div class="num">{{ s.dupes }}</div>
+    <div class="lbl">duplicate files flagged</div></div>
+  <div class="stat {% if s.reviews > 0 %}warn{% endif %}">
+    <div class="num">{{ s.reviews }}</div>
+    <div class="lbl">open review items</div></div>
+</div>
+
+<div class="panel">
+  <h2 style="margin-top:0">Catalogue health</h2>
+  <table>
+    <tr><th>Measure</th><th class="num">Count</th><th>Note</th></tr>
+    <tr><td>Works without a year</td><td class="num">{{ no_year }}</td>
+      <td class="muted">fill via the work page or review queue</td></tr>
+    <tr><td>Works without an author</td><td class="num">{{ no_author }}</td>
+      <td class="muted">many are journals/encyclopedia volumes</td></tr>
+    <tr><td>Files marked missing</td><td class="num">{{ s.missing }}</td>
+      <td class="muted">present in the catalogue but not on disk</td></tr>
+    <tr><td>Notes recorded</td><td class="num">{{ s.notes }}</td>
+      <td class="muted">quotes and annotations</td></tr>
+    <tr><td>Reading lists</td><td class="num">{{ s.lists }}</td>
+      <td class="muted">each exports a Harvard bibliography</td></tr>
+  </table>
+</div>
+
+<div class="cols">
+  <div>
+    <h2>Top subjects</h2>
+    <table>
+      {% for s2 in top_subjects %}
+      <tr>
+        <td><a href="{{ url_for('subject', slug=s2.slug) }}">{{ s2.term }}</a></td>
+        <td class="num">
+          <span class="bar" style="width: {{ [90 * s2.n / top_subjects[0].n, 4]|max }}px"></span>
+          {{ s2.n }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div>
+    <h2>Recently catalogued</h2>
+    <table>
+      {% for w in recent %}
+      <tr><td><a href="{{ url_for('work_page', work_id=w.id) }}">{{ w.title[:70] }}</a></td>
+          <td class="num">{{ w.year or '—' }}</td>
+          <td><span class="pill {{ 'ok' if w.confidence >= 0.8 else ('warn' if w.confidence >= 0.5 else 'bad') }}">{{ w.confidence|pct }}</span></td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<div class="cols">
+  <div>
+    <h2>Files by kind</h2>
+    <table>
+      {% for k in by_kind %}
+      <tr><td>{{ k.kind }}</td><td class="num">{{ k.n }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div>
+    <h2>Book formats</h2>
+    <table>
+      {% for e in by_ext %}
+      <tr><td>{{ e.ext }}</td><td class="num">{{ e.n }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}
