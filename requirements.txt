@@ -1,4 +1,13 @@
-flask>=3.0
 python-docx>=1.1
 reportlab>=3.5
 pymupdf>=1.24        # fast, robust full-text PDF extraction (lib/text.py)
+pywebview>=6.0       # native desktop window (Edge WebView2, MIT) for desktop.py
+requests>=2.31
+Pillow>=10.0
+PyYAML>=6.0
+networkx>=3.0
+ebooklib>=0.18
+beautifulsoup4>=4.12
+pypdf>=4.0
+psutil>=5.9
+# pyinstaller>=6.0   # only needed to build the standalone .exe (build.bat)
