@@ -38,7 +38,6 @@ class BookAnalysisScreen(RecordScreen):
             bar.add_widget(widget)
         layout.add_widget(bar)
         actions = GridLayout(cols=3, size_hint_y=None, height=dp(88), spacing=dp(6))
-        self.coverage_button = self.button("Coverage / flagged books", lambda: self.confirm_discard(self.coverage))
         self.select_button = self.button("Preview book selection", lambda: self.confirm_discard(self.select))
         self.analyse_button = self.button("Analyse selected books (no writes)", self.analyse)
         self.repair_button = self.button("Preview saved-index repair",
@@ -46,11 +45,17 @@ class BookAnalysisScreen(RecordScreen):
         self.notes_button = self.button("Preview description summaries / body quotes",
                                        lambda: self.confirm_discard(lambda: self.derived("notes")))
         self.next_button = self.button("Next batch after last selected ID", self.next_batch)
-        self.actions = (self.coverage_button, self.select_button, self.analyse_button,
+        self.actions = (self.select_button, self.analyse_button,
                         self.repair_button, self.notes_button, self.next_button)
         for button in self.actions:
             actions.add_widget(button)
         layout.add_widget(actions)
+
+        # Standalone, prominent flagged-books button (its own row, full width)
+        flag_row = BoxLayout(size_hint_y=None, height=dp(42), spacing=dp(6))
+        self.coverage_button = self.button("View flagged books (no embedded text)", self.coverage)
+        flag_row.add_widget(self.coverage_button)
+        layout.add_widget(flag_row)
         bulk = BoxLayout(size_hint_y=None, height=dp(38), spacing=dp(6))
         self.bulk_status_button = self.button("Running library index: show progress", self.bulk_status)
         self.bulk_stop_button = self.button("Stop bulk indexing after current book", self.stop_bulk)
